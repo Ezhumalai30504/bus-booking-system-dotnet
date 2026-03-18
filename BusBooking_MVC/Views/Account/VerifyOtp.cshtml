@@ -1,0 +1,24 @@
+﻿@model BusBooking_MVC.Models.VerifyOtp
+
+<h2>Verify OTP</h2>
+
+<p>OTP sent to: <strong>@(Model.Email ?? ViewBag.Email)</strong></p>
+
+<form asp-action="VerifyOtp" method="post">
+
+    <input asp-for="Email" type="hidden" />
+
+    <div class="mb-3">
+        <label asp-for="OtpCode" class="form-label"></label>
+        <input asp-for="OtpCode" class="form-control" />
+        <span asp-validation-for="OtpCode" class="text-danger"></span>
+    </div>
+
+    <div asp-validation-summary="All" class="text-danger mb-2"></div>
+
+    <button type="submit" class="btn btn-success">Verify OTP</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

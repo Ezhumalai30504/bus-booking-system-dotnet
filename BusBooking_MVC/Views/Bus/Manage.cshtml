@@ -1,0 +1,67 @@
+﻿@model List<BusBooking_MVC.Models.BusRead>
+
+@{
+    ViewData["Title"] = "Manage Buses";
+}
+
+<h2>Manage Buses</h2>
+
+<a asp-action="Create" class="btn btn-success mb-3">Add New Bus</a>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Bus Name</th>
+            <th>Total Seats</th>
+            <th>Price</th>
+            <th>Route Id</th>
+            <th style="width:220px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var bus in Model)
+            {
+                <tr>
+                    <td>@bus.BusName</td>
+                    <td>@bus.TotalSeats</td>
+                    <td>@bus.Price</td>
+                    <td>@bus.RouteId</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@bus.Id"
+                           class="btn btn-warning btn-sm">Edit</a>
+
+                        @* <form asp-action="Delete"
+                              asp-route-id="@bus.Id"
+                              method="post"
+                              style="display:inline;">
+                            <button type="submit"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Are you sure?');">
+                                Delete
+                            </button>
+                        </form> *@
+
+                        <a asp-action="Delete" asp-route-id="@bus.Id"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Are you sure?');">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center text-danger">
+                    No buses found.
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a asp-controller="Admin" asp-action="AdminDashboard" class="btn btn-dark mt-2">Back</a>
+</div>

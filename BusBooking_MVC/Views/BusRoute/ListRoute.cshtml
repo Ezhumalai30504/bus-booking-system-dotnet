@@ -1,0 +1,92 @@
+﻿@model List<BusBooking_MVC.Models.BusRoute>
+
+@{
+    ViewData["Title"] = "Bus Routes";
+    var today = DateTime.Today.ToString("yyyy-MM-dd");
+}
+
+<div class="container mt-5">
+
+    <h2 class="text-center mb-4 text-primary">🚌 Bus Routes</h2>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <!-- ✅ Search Button Added Here -->
+    <div class="text-end mb-4">
+        <a asp-controller="BusRoute"
+           asp-action="Search"
+           class="btn btn-primary btn-lg">
+            🔍 Search Bus
+        </a>
+    </div>
+
+    <div class="card shadow-lg">
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0">📍 All Bus Routes</h4>
+        </div>
+
+        <div class="card-body">
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>From City</th>
+                                <th>To City</th>
+                                <th style="width:300px;">Travel Date & Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var route in Model)
+                            {
+                                <tr>
+                                    <td>@route.FromCity</td>
+                                    <td>@route.ToCity</td>
+
+                                    <td>
+                                        <form asp-controller="Bus"
+                                              asp-action="ByRoute"
+                                              method="get"
+                                              class="d-flex gap-2">
+
+                                            <input type="hidden"
+                                                   name="routeId"
+                                                   value="@route.Id" />
+
+                                            <input type="date"
+                                                   name="travelDate"
+                                                   class="form-control form-control-sm"
+                                                   min="@today"
+                                                   required />
+
+                                            <button type="submit"
+                                                    class="btn btn-success btn-sm">
+                                                Book Now
+                                            </button>
+
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-dark mt-2">Back</a>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info mb-0">
+                    No routes available.
+                </div>
+            }
+        </div>
+    </div>
+</div>

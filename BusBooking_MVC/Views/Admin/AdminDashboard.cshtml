@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+    var email = ViewBag.Email as string;
+}
+
+<div class="container mt-5">
+
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-dark">👑 Admin Dashboard</h2>
+        <hr class="w-25 mx-auto" />
+    </div>
+
+    <div class="alert alert-success text-center shadow-sm">
+        <h5>Welcome, @email</h5>
+        <p>You are logged in as <strong>Admin</strong></p>
+    </div>
+
+    <div class="row g-4 mt-3">
+
+        <!-- Manage Routes -->
+        <div class="col-md-4">
+            <div class="card shadow border-0 h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">🚌 Manage Routes</h5>
+                    <p class="text-muted">Add, edit, or delete bus routes.</p>
+                    <a asp-controller="BusRoute"
+                       asp-action="ListRoute"
+                       class="btn btn-dark w-100">
+                        View Routes
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Buses -->
+        <div class="col-md-4">
+            <div class="card shadow border-0 h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">🚍 Manage Buses</h5>
+                    <p class="text-muted">Add and manage bus details.</p>
+                    <a asp-controller="Bus" asp-action="Manage" class="btn btn-dark w-100">
+                        Manage Buses
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Bookings -->
+        <div class="col-md-4">
+            <div class="card shadow border-0 h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">📑 View Bookings</h5>
+                    <p class="text-muted">View all user bookings.</p>
+                    <a asp-controller="Booking" asp-action="AdminManage" class="btn btn-dark w-100">
+                        View Bookings
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="text-center mt-5">
+        <a asp-controller="Account"
+           asp-action="AdminLogout"
+           class="btn btn-danger">
+            Logout
+        </a>
+    </div>
+
+</div>

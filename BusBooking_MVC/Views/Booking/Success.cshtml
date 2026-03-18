@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Booking Success";
+
+    var bookingId = ViewBag.BookingId?.ToString();
+    var message = ViewBag.Message?.ToString();
+    var amount = ViewBag.Amount?.ToString();
+    var status = ViewBag.PaymentStatus?.ToString();
+}
+
+<div class="container mt-5">
+
+    <div class="card shadow-lg">
+        <div class="card-header bg-success text-white">
+            <h4>✅ Booking Confirmed</h4>
+        </div>
+
+        <div class="card-body">
+
+            <p><strong>Message:</strong> @message</p>
+
+            <p>
+                <strong>Payment Status:</strong>
+                <span class="badge bg-success">@status</span>
+            </p>
+
+            <p><strong>Amount Paid:</strong> ₹ @amount</p>
+
+            @* ✅ Show cancel only if bookingId exists AND not "0" *@
+            @if (!string.IsNullOrEmpty(bookingId) && bookingId != "0")
+            {
+                <p><strong>Booking ID:</strong> @bookingId</p>
+
+                <a asp-controller="Booking"
+                   asp-action="CancelForm"
+                   asp-route-bookingId="@bookingId"
+                   class="btn btn-danger">
+                    ❌ Cancel Booking
+                </a>
+            }
+
+            <a asp-controller="Booking"
+               asp-action="MyBookings"
+               class="btn btn-dark ms-2">
+                My Bookings
+            </a>
+
+            <a asp-controller="Dashboard"
+               asp-action="Index"
+               class="btn btn-primary ms-2">
+                Go Home
+            </a>
+        </div>
+    </div>
+</div>

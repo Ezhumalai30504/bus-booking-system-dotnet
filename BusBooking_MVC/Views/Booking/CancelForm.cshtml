@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Cancel Booking";
+}
+
+<div class="container mt-5">
+
+    <h3>Cancel Booking</h3>
+
+    <form asp-action="CancelForm" method="post" class="mt-3">
+
+        <div class="mb-3">
+            <label class="form-label">Booking ID</label>
+            <input type="number"
+                   name="bookingId"
+                   class="form-control"
+                   value="@ViewBag.BookingId"
+                   required />
+        </div>
+
+        <button class="btn btn-danger">
+            Cancel Booking
+        </button>
+        <a asp-controller="Booking" asp-action="MyBookings" class="btn btn-outline-dark ms-2">
+            Back
+        </a>
+
+    </form>
+
+</div>

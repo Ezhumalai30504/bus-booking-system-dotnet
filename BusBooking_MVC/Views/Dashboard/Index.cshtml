@@ -1,0 +1,83 @@
+﻿@{
+    var email = ViewBag.Email as string;
+    var role = ViewBag.Role as string;
+}
+
+<div class="container mt-5">
+
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">🚌 Bus Booking Dashboard</h2>
+        <hr class="w-25 mx-auto" />
+    </div>
+
+    @if (string.IsNullOrEmpty(email))
+    {
+        <div class="row g-4">
+
+            <!-- Admin Panel -->
+            <div class="col-md-6">
+                <div class="card shadow-lg border-0 h-100">
+                    <div class="card-header bg-dark text-white text-center">
+                        <h4>👑 Admin Panel</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <p class="text-muted">Manage routes, buses, and system settings.</p>
+                        <a asp-controller="Account" asp-action="AdminLogin" class="btn btn-dark w-75">
+                            Admin Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Panel -->
+            <div class="col-md-6">
+                <div class="card shadow-lg border-0 h-100">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h4>👤 User Panel</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <p class="text-muted">Book buses and manage your tickets easily.</p>
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-primary w-75 mb-3">
+                            Login
+                        </a>
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-success w-75">
+                            Register
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+    else
+    {
+        <div class="text-center">
+            <div class="alert alert-success shadow-sm">
+                <h4>Welcome, @email</h4>
+                <p><strong>Role:</strong> @role</p>
+            </div>
+
+            @if (role == "Admin")
+            {
+                <a asp-controller="Admin" asp-action="AdminDashboard" class="btn btn-dark me-2">
+                    Go to Admin Dashboard
+                </a>
+            }
+            else if (role == "User")
+            {
+                <a asp-controller="BusRoute" asp-action="ListRoute" class="btn btn-primary me-2">
+                    Explore Routes
+                </a>
+            }
+
+            <a asp-controller="Account" asp-action="Logout" class="btn btn-danger">
+                Logout
+            </a>
+            <a asp-controller="Booking"
+               asp-action="MyBookings"
+               class="btn btn-dark ms-2">
+                My Bookings
+            </a>
+        </div>
+    }
+</div>

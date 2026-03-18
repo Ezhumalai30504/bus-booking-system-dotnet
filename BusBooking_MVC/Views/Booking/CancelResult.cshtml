@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Cancel Result";
+    var msg = TempData["CancelMessage"];
+}
+
+<div class="container mt-5">
+
+    <div class="alert alert-info">
+        <strong>Result:</strong> @msg
+    </div>
+
+    <a asp-controller="Dashboard"
+       asp-action="Index"
+       class="btn btn-primary">
+        Go Home
+    </a>
+
+</div>

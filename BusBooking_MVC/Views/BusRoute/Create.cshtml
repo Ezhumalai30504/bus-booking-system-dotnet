@@ -1,0 +1,22 @@
+﻿@model BusBooking_MVC.Models.BusRoute
+
+@{
+    ViewData["Title"] = "Create Route";
+}
+
+<h2>Create Bus Route</h2>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label class="form-label">From City</label>
+        <input asp-for="FromCity" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">To City</label>
+        <input asp-for="ToCity" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="ListRoute" class="btn btn-secondary">Back</a>
+</form>

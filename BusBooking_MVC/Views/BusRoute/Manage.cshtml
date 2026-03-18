@@ -1,0 +1,46 @@
+﻿@model List<BusBooking_MVC.Models.BusRoute> 
+
+@{
+    ViewData["Title"] = "Manage Bus Routes";
+}
+
+<h2>Manage Bus Routes</h2>
+
+<a asp-action="Create" class="btn btn-success mb-3">Add New Route</a>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Id</th>
+            <th>From City</th>
+            <th>To City</th>
+            <th style="width:200px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var route in Model)
+        {
+            <tr>
+                <td>@route.Id</td>
+                <td>@route.FromCity</td>
+                <td>@route.ToCity</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@route.Id"
+                       class="btn btn-warning btn-sm">Edit</a>
+
+                    <a asp-action="Delete" asp-route-id="@route.Id"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Are you sure?');">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a asp-controller="Admin" asp-action="AdminDashboard" class="btn btn-dark mt-2">Back</a>
+</div>
+
+
+

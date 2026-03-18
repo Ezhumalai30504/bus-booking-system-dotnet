@@ -1,0 +1,202 @@
+﻿@using Microsoft.AspNetCore.Html
+@model BusBooking_MVC.Models.Booking.BookingCreateVM
+
+@{
+    ViewData["Title"] = "Seat Booking";
+}
+
+<style>
+    /* hide checkbox but keep it working */
+    .seat-check {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    /* Seat look */
+    .seat-box {
+        width: 52px;
+        height: 44px;
+        border-radius: 10px;
+        border: 2px solid #0d6efd; /* bootstrap primary */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        cursor: pointer;
+        user-select: none;
+        background: #fff; /* available */
+        transition: .12s ease;
+    }
+
+    /* Selected -> green (no JS) */
+    .seat-check:checked + .seat-box {
+        background: #198754; /* bootstrap success */
+        border-color: #198754;
+        color: #fff;
+    }
+
+    /* Hover */
+    .seat-wrap:hover .seat-box {
+        transform: translateY(-1px);
+    }
+
+    /* Booked/Occupied */
+    .seat-check:disabled + .seat-box {
+        background: #dc3545; /* bootstrap danger */
+        border-color: #dc3545;
+        color: #fff;
+        cursor: not-allowed;
+        opacity: .85;
+        transform: none;
+    }
+
+    /* Bus shell */
+    .bus-shell {
+        max-width: 340px;
+        border: 3px solid #6c757d;
+        border-radius: 14px;
+        background: #f8f9fa;
+        padding: 14px;
+        position: relative;
+    }
+
+    .driver-icon {
+        position: absolute;
+        top: 10px;
+        right: 14px;
+        font-size: 22px;
+        opacity: .85;
+    }
+
+    /* Seat grid: 2 seats + aisle + 2 seats */
+    .seat-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 28px 1fr 1fr;
+        gap: 12px 10px;
+        padding-top: 34px;
+        justify-items: center;
+        align-items: center;
+    }
+
+    .aisle {
+        width: 28px;
+        height: 44px;
+    }
+</style>
+
+<div class="container mt-4">
+
+    <h2 class="mb-3">🚌 Seat Booking</h2>
+
+    <div class="card p-3 shadow-sm mb-3">
+        <div><strong>Bus:</strong> @Model.BusName</div>
+        <div><strong>Date:</strong> @Model.TravelDate.ToString("yyyy-MM-dd")</div>
+        <div><strong>Price per seat:</strong> ₹ @Model.Price.ToString("0.00")</div>
+    </div>
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    <form asp-action="Create" method="post">
+
+        <input type="hidden" asp-for="BusId" />
+        <input type="hidden" asp-for="BusName" />
+        <input type="hidden" asp-for="TravelDate" />
+        <input type="hidden" asp-for="TotalSeats" />
+        <input type="hidden" asp-for="Price" />
+
+        <!-- Legend (Bootstrap) -->
+        <div class="d-flex flex-wrap gap-3 align-items-center mb-3">
+            <div class="d-flex align-items-center gap-2">
+                <span class="border border-2 border-dark rounded" style="width:18px;height:18px;display:inline-block;background:#fff;"></span>
+                <span>Available</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="border border-2 rounded" style="width:18px;height:18px;display:inline-block;background:#198754;border-color:#198754 !important;"></span>
+                <span>Selected</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="border border-2 rounded" style="width:18px;height:18px;display:inline-block;background:#dc3545;border-color:#dc3545 !important;"></span>
+                <span>Occupied</span>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <div class="bus-shell shadow-sm">
+                <div class="driver-icon" title="Driver">🛞</div>
+
+                <div class="seat-grid">
+                    @{
+                        var seats = Model.Seats?.OrderBy(s => s.Number).ToList()
+                        ?? new List<BusBooking_MVC.Models.Booking.SeatVM>();
+
+                        int i = 0;
+                        while (i < seats.Count)
+                        {
+                            var s1 = (i < seats.Count) ? seats[i++] : null;
+                            var s2 = (i < seats.Count) ? seats[i++] : null;
+                            var s3 = (i < seats.Count) ? seats[i++] : null;
+                            var s4 = (i < seats.Count) ? seats[i++] : null;
+
+                            @SeatCell(s1)
+                            @SeatCell(s2)
+
+                            <div class="aisle"></div>
+
+                            @SeatCell(s3)
+                            @SeatCell(s4)
+                        }
+                    }
+                </div>
+
+                <div class="text-center mt-3">
+                    <span class="badge bg-light text-dark border">White = Available</span>
+                    <span class="badge bg-success ms-2">Green = Selected</span>
+                    <span class="badge bg-danger ms-2">Red = Occupied</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex gap-2 justify-content-center">
+            <button type="submit" class="btn btn-success">
+                ✅ Confirm Booking & Pay
+            </button>
+
+            <a asp-controller="BusRoute"
+               asp-action="ListRoute"
+               class="btn btn-outline-dark">
+                Back
+            </a>
+        </div>
+
+    </form>
+</div>
+
+@functions {
+    // NOTE: change SeatVM type name if yours is different
+    public IHtmlContent SeatCell(BusBooking_MVC.Models.Booking.SeatVM seat)
+    {
+        if (seat == null)
+            return new HtmlString("<div style='width:52px;height:44px;'></div>");
+
+        if (seat.IsAvailable)
+        {
+            // Checkbox + next sibling .seat-box => CSS handles selected state
+            return new HtmlString($@"
+<label class='seat-wrap position-relative'>
+    <input class='seat-check' type='checkbox' name='SelectedSeats' value='{seat.Number}' />
+    <span class='seat-box'>{seat.Number}</span>
+</label>");
+        }
+        else
+        {
+            // Disabled checkbox for occupied (still no select)
+            return new HtmlString($@"
+<label class='seat-wrap position-relative'>
+    <input class='seat-check' type='checkbox' disabled />
+    <span class='seat-box'>{seat.Number}</span>
+</label>");
+        }
+    }
+}

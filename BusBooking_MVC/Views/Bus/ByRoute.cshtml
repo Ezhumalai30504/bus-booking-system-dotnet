@@ -1,0 +1,58 @@
+﻿@model List<BusBooking_MVC.Models.BusRead>
+
+@{
+    ViewData["Title"] = "Available Buses";
+}
+
+<div class="container mt-4">
+
+    <h3 class="mb-2">🚌 Available Buses</h3>
+
+    <!-- ✅ WRITE IT HERE -->
+    <p class="text-muted">
+        Travel Date: <strong>@ViewBag.TravelDate</strong>
+    </p>
+
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Bus Name</th>
+                    <th>Total Seats</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bus in Model)
+                {
+                    <tr>
+                        <td>@bus.BusName</td>
+                        <td>@bus.TotalSeats</td>
+                        <td>₹ @bus.Price</td>
+                        <td>
+                            <a asp-controller="Booking"
+                               asp-action="Create"
+                               asp-route-busId="@bus.Id"
+                               asp-route-travelDate="@ViewBag.TravelDate"
+                               class="btn btn-primary btn-sm">
+                                Select Seats
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            No buses available for this date.
+        </div>
+    }
+
+    <a class="btn btn-dark mt-3" asp-controller="BusRoute" asp-action="ListRoute">
+        Back to Routes
+    </a>
+</div>
